@@ -1,0 +1,59 @@
+const int ldrPin = A0;   // Pino analógico onde o LDR está conectado
+const int greenLedPin = 2;  // Pino do LED verde
+const int yellowLedPin = 3; // Pino do LED amarelo
+const int redLedPin = 4;    // Pino do LED vermelho
+const int buzzerPin = 5;    // Pino do buzzer
+
+ 
+
+int ldrValue; // Variável para armazenar o valor lido do LDR
+int thresholdLow = 150; // Limiar para "tudo bem"
+int thresholdMedium = 250; //Limiar para "alerta"
+
+ 
+
+ 
+
+void setup() {
+  pinMode(greenLedPin, OUTPUT);
+  pinMode(yellowLedPin, OUTPUT);
+  pinMode(redLedPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+ 
+
+void loop() {
+  // Lê o valor do LDR
+  ldrValue = analogRead(ldrPin);
+  Serial.println(ldrValue); // Mostra o valor do LDR no Monitor Serial (opcional)
+
+ 
+
+  // Verifica o nível de luz e controla os LEDs e o buzzer
+  if (ldrValue <= thresholdLow) {
+    digitalWrite(greenLedPin, HIGH);
+    digitalWrite(yellowLedPin, LOW);
+    digitalWrite(redLedPin, LOW);
+    noTone(buzzerPin);
+  } else if (ldrValue > thresholdLow && ldrValue <= thresholdMedium) {
+    digitalWrite(greenLedPin, LOW);
+    digitalWrite(yellowLedPin, HIGH);
+    digitalWrite(redLedPin, LOW);
+    tone(buzzerPin, 500); // Ativa o buzzer com uma frequência de 1000 Hz (ajuste conforme necessário)
+    delay(3000);
+    noTone(buzzerPin);
+  }
+    else {
+    // Caso o valor do LDR seja superior ao limite medio, ativa o alarme
+    digitalWrite(greenLedPin, LOW);
+    digitalWrite(yellowLedPin, LOW);
+    digitalWrite(redLedPin, HIGH);
+    noTone(buzzerPin);
+  }
+
+ 
+
+  delay(5000); // Aguarda 1 segundo antes de ler novamente o valor do LDR
+} 
